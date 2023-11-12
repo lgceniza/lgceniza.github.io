@@ -1,0 +1,13 @@
+{
+    "categoryList": [
+        {
+            "category": "category1",
+            "images": [
+                {
+                    "imageId": "customGalleryId1",
+                    "src": "images/imag1.jpg"
+                }
+            ]
+        }
+    ]
+}

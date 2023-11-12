@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pullen's Portfolio – my different various works of art</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+</head>
+<body>
+    <!-- logo, header, and socials container -->
+    <div>
+        <!-- left division -->
+        <div>
+            <span onclick="showOrHideCategory()" class="navLogo">
+                LOGO
+                <!-- <img src="logo.png"> -->
+            </span>
+            <span>
+                Pullen's Portfolio
+            </span>
+        </div>
+        <!-- right division -->
+        <div>
+            <a href="https://twitter.com/_Losif_">twitter</a>
+            <a href="https://www.instagram.com/losiflg/">instagram</a>
+        </div>
+    </div>
+    <!-- category container -->
+    <div id="categoryContainer" class="categoryNav">
+        <div>
+            <span onclick="showOrHideCategory()" class="navLogo">
+                LOGO
+                <!-- <img src="logo.png"> -->
+            </span>
+            <span>
+                Pullen's Portfolio
+            </span>
+        </div>
+        <ul id="navList">
+            <li>
+                add script to automatically add category based on json. each category is clickable and jumps to section
+            </li>
+        </ul>
+    </div>
+    <div>
+        <!-- gallery proper -->
+        <!-- modal images, responsive image grid, carousel in modal (lightbox) -->
+        <div>
+            <span id="category1">category 1</div>
+            <img id="customGalleryId1" src="{{ url_for('static', filename='images/imag1.jpg') }}" class="galleryItem" onclick="showImg(this.id)"></div>
+        </div>
+        <div>category 2</div>
+        <img id="customGalleryId2" src="{{ url_for('static', filename='images/imag2.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
+        <div>category 3</div>
+        <img id="customGalleryId3" src="{{ url_for('static', filename='images/imag3.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
+        <div>category 4</div>
+        <img id="customGalleryId4" src="{{ url_for('static', filename='images/imag4.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
+        <!-- <div>category 2</div>
+        <div style="width: 300px; height: 300px; border: 1px solid black;"></div> -->
+
+        <div id="galleryModal" class="modal">
+            <img id="modalImg" class="modal-content">
+        </div>
+    </div>
+</body>
+<script>
+    function populateNavList() {
+        const categoryList = fetch("{{ url_for('static', filename='category.json') }}")
+            .then(res => {
+                res.json();
+            }).then(content => {
+                console.log(content)
+            })
+        // document.getElementById('spanid').scrollIntoView()
+    }
+
+    function showOrHideCategory() {
+        const sidebar = document.getElementById('categoryContainer');
+        const sidebarWidth = "300px";
+        if (sidebar.style.width == sidebarWidth) {
+            sidebar.style.width = 0;
+        } else {
+            sidebar.style.width = sidebarWidth;
+
+            populateNavList();
+        }
+    }
+
+    const modal = document.getElementById('galleryModal');
+    function showImg(id) {
+        const img = document.getElementById(id);
+        modal.style.display = "block";
+        document.getElementById('modalImg').src = img.src;
+    }
+
+    modal.onclick = function() {
+        modal.style.display = "none";
+    }
+</script>
+</html>
