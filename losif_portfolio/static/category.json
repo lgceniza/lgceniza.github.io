@@ -1,11 +1,46 @@
 {
     "categoryList": [
         {
-            "category": "category1",
+            "categoryId": "category1",
+            "categoryName": "category 1 name",
             "images": [
                 {
                     "imageId": "customGalleryId1",
                     "src": "images/imag1.jpg"
+                },
+                {
+                    "imageId": "customGalleryId1a",
+                    "src": "images/imag2.webp"
+                }
+            ]
+        },
+        {
+            "categoryId": "category2",
+            "categoryName": "category 2 name",
+            "images": [
+                {
+                    "imageId": "customGalleryId2",
+                    "src": "images/imag2.webp"
+                }
+            ]
+        },
+        {
+            "categoryId": "category3",
+            "categoryName": "category 3 name",
+            "images": [
+                {
+                    "imageId": "customGalleryId3",
+                    "src": "images/imag3.webp"
+                }
+            ]
+        },
+        {
+            "categoryId": "category4",
+            "categoryName": "category 4 name",
+            "images": [
+                {
+                    "imageId": "customGalleryId4",
+                    "src": "images/imag4.webp"
                 }
             ]
         }

@@ -6,7 +6,7 @@
     <title>Pullen's Portfolio – my different various works of art</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
 </head>
-<body>
+<body onload="populateGallery()">
     <!-- logo, header, and socials container -->
     <div>
         <!-- left division -->
@@ -36,27 +36,10 @@
                 Pullen's Portfolio
             </span>
         </div>
-        <ul id="navList">
-            <li>
-                add script to automatically add category based on json. each category is clickable and jumps to section
-            </li>
-        </ul>
+        <ul id="navList"></ul>
     </div>
-    <div>
-        <!-- gallery proper -->
+    <div id="gallery">
         <!-- modal images, responsive image grid, carousel in modal (lightbox) -->
-        <div>
-            <span id="category1">category 1</div>
-            <img id="customGalleryId1" src="{{ url_for('static', filename='images/imag1.jpg') }}" class="galleryItem" onclick="showImg(this.id)"></div>
-        </div>
-        <div>category 2</div>
-        <img id="customGalleryId2" src="{{ url_for('static', filename='images/imag2.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
-        <div>category 3</div>
-        <img id="customGalleryId3" src="{{ url_for('static', filename='images/imag3.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
-        <div>category 4</div>
-        <img id="customGalleryId4" src="{{ url_for('static', filename='images/imag4.webp') }}" class="galleryItem" onclick="showImg(this.id)"></div>
-        <!-- <div>category 2</div>
-        <div style="width: 300px; height: 300px; border: 1px solid black;"></div> -->
 
         <div id="galleryModal" class="modal">
             <img id="modalImg" class="modal-content">
@@ -64,19 +47,60 @@
     </div>
 </body>
 <script>
+    const gallery = document.getElementById('gallery')
+    const modal = document.getElementById('galleryModal')
+    const modalImage = document.getElementById('modalImg')
+    const sidebarWidth = "300px";
+    const sidebar = document.getElementById('categoryContainer')
+
+    const categoryJson = fetch("{{ url_for('static', filename='category.json') }}")
+        .then(res => res.json())
+        .then(content => {return content})
+
+
     function populateNavList() {
-        const categoryList = fetch("{{ url_for('static', filename='category.json') }}")
-            .then(res => {
-                res.json();
-            }).then(content => {
-                console.log(content)
+        const navList = document.getElementById('navList')
+        navList.innerHTML = ''
+
+        categoryJson.then(ls => {
+            ls['categoryList'].forEach(category => {
+                const navItem = document.createElement('li')
+                navItem.innerText = category['categoryName']
+                navItem.onclick = function () {
+                    document.getElementById(category['categoryId']).scrollIntoView({"behavior": "smooth"})
+                    showOrHideCategory()
+                }
+                navItem.setAttribute('class', 'navItem')
+                navList.appendChild(navItem)
             })
-        // document.getElementById('spanid').scrollIntoView()
+        })
+    }
+
+    function populateGallery() {
+        categoryJson.then(ls => {
+            ls['categoryList'].forEach(category => {
+                const categoryDiv = document.createElement('div')
+                const nameIdCard = document.createElement('div')
+                nameIdCard.id = category['categoryId']
+                nameIdCard.innerText = category['categoryName']
+                categoryDiv.appendChild(nameIdCard)
+
+                category['images'].forEach(image => {
+                    const imgNode = document.createElement('img')
+
+                    imgNode.setAttribute('id', image['imageId'])
+                    imgNode.src = `/static/${image["src"]}`
+                    imgNode.setAttribute('class', "galleryItem")
+                    imgNode.setAttribute('onclick', "showImg(this.id)")
+
+                    categoryDiv.appendChild(imgNode)
+                })
+                gallery.insertBefore(categoryDiv, modal)
+            })
+        })
     }
 
     function showOrHideCategory() {
-        const sidebar = document.getElementById('categoryContainer');
-        const sidebarWidth = "300px";
         if (sidebar.style.width == sidebarWidth) {
             sidebar.style.width = 0;
         } else {
@@ -86,15 +110,27 @@
         }
     }
 
-    const modal = document.getElementById('galleryModal');
     function showImg(id) {
         const img = document.getElementById(id);
         modal.style.display = "block";
-        document.getElementById('modalImg').src = img.src;
+        modalImage.src = img.src;
     }
 
-    modal.onclick = function() {
-        modal.style.display = "none";
+    function slideImage(index) {
+        return
     }
+
+    document.addEventListener('click', function clickOutsideSidebar(event) {
+        if (sidebar.style.width == sidebarWidth && !sidebar.contains(event.target) && gallery.contains(event.target)) {
+            showOrHideCategory()
+        }
+    })
+
+    document.addEventListener('click', function clickOutsideModalImage(event) {
+        if (modal.contains(event.target) && !modalImage.contains(event.target)) {
+            modal.style.display = "none"
+            modalImage.removeAttribute('src')
+        }
+    })
 </script>
 </html>
