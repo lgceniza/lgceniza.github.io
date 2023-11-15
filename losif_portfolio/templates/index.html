@@ -11,7 +11,7 @@
     <div>
         <!-- left division -->
         <div>
-            <span onclick="showOrHideCategory()" class="navLogo">
+            <span onclick="showOrHideNav()" class="navLogo">
                 LOGO
                 <!-- <img src="logo.png"> -->
             </span>
@@ -28,7 +28,7 @@
     <!-- category container -->
     <div id="categoryContainer" class="categoryNav">
         <div>
-            <span onclick="showOrHideCategory()" class="navLogo">
+            <span onclick="showOrHideNav()" class="navLogo">
                 LOGO
                 <!-- <img src="logo.png"> -->
             </span>
@@ -37,12 +37,20 @@
             </span>
         </div>
         <ul id="navList"></ul>
+        <div>
+            <a href="https://twitter.com/_Losif_">twitter</a>
+            <a href="https://www.instagram.com/losiflg/">instagram</a>
+        </div>
     </div>
     <div id="gallery">
         <!-- modal images, responsive image grid, carousel in modal (lightbox) -->
 
         <div id="galleryModal" class="modal">
             <img id="modalImg" class="modal-content">
+            <span class="close" onclick="closeImage()">&times;</span>
+            <span class="prev" onclick="moveSlide(-1)">&#10094;</span>
+            <span class="next" onclick="moveSlide(1)">&#10095;</span>
+            <div id="dotModalNav" style="text-align: center;"></div>
         </div>
     </div>
 </body>
@@ -52,23 +60,24 @@
     const modalImage = document.getElementById('modalImg')
     const sidebarWidth = "300px";
     const sidebar = document.getElementById('categoryContainer')
+    let currentImgId = undefined
 
     const categoryJson = fetch("{{ url_for('static', filename='category.json') }}")
         .then(res => res.json())
-        .then(content => {return content})
+        .then(content => content)
 
 
-    function populateNavList() {
+    function populateSideNav() {
         const navList = document.getElementById('navList')
         navList.innerHTML = ''
 
         categoryJson.then(ls => {
             ls['categoryList'].forEach(category => {
                 const navItem = document.createElement('li')
-                navItem.innerText = category['categoryName']
+                navItem.innerText = category.categoryName
                 navItem.onclick = function () {
-                    document.getElementById(category['categoryId']).scrollIntoView({"behavior": "smooth"})
-                    showOrHideCategory()
+                    document.getElementById(category.categoryId).scrollIntoView({"behavior": "smooth"})
+                    showOrHideNav()
                 }
                 navItem.setAttribute('class', 'navItem')
                 navList.appendChild(navItem)
@@ -80,16 +89,18 @@
         categoryJson.then(ls => {
             ls['categoryList'].forEach(category => {
                 const categoryDiv = document.createElement('div')
-                const nameIdCard = document.createElement('div')
-                nameIdCard.id = category['categoryId']
-                nameIdCard.innerText = category['categoryName']
+                categoryDiv.id = category.categoryId
+
+                const nameIdCard = document.createElement('h1')
+                nameIdCard.innerText = category.categoryName
+
                 categoryDiv.appendChild(nameIdCard)
 
                 category['images'].forEach(image => {
                     const imgNode = document.createElement('img')
 
-                    imgNode.setAttribute('id', image['imageId'])
-                    imgNode.src = `/static/${image["src"]}`
+                    imgNode.setAttribute('id', image.imageId)
+                    imgNode.src = `/static/${image.src}`
                     imgNode.setAttribute('class', "galleryItem")
                     imgNode.setAttribute('onclick', "showImg(this.id)")
 
@@ -100,13 +111,34 @@
         })
     }
 
-    function showOrHideCategory() {
+    function populateModalNav() {
+        getSelectedImageList().then(imagesArr => {
+            const dotDiv = document.getElementById('dotModalNav')
+            dotDiv.innerHTML = ""
+            showOrHideSlideButtons("none")
+
+            if (imagesArr.length == 1) return
+            imagesArr.forEach(imageObj => {
+                showOrHideSlideButtons("inline")
+                const dotNode = document.createElement('span')
+                const dotId = imageObj.imageId
+                dotNode.setAttribute('onclick', `showImg('${dotId}')`)
+                dotNode.className = "dot"
+                if (dotId == currentImgId) {
+                    dotNode.className += " active"
+                }
+                dotDiv.appendChild(dotNode)
+            })
+        })
+    }
+
+    function showOrHideNav() {
         if (sidebar.style.width == sidebarWidth) {
             sidebar.style.width = 0;
         } else {
             sidebar.style.width = sidebarWidth;
 
-            populateNavList();
+            populateSideNav();
         }
     }
 
@@ -114,22 +146,44 @@
         const img = document.getElementById(id);
         modal.style.display = "block";
         modalImage.src = img.src;
+        currentImgId = id
+
+        populateModalNav()
     }
 
-    function slideImage(index) {
-        return
+    function closeImage() {
+        modal.style.display = "none"
+        modalImage.removeAttribute('src')
+        currentImgId = null
+    }
+
+    function moveSlide(n) {
+        getSelectedImageList().then(imagesArr => {
+            const imagesCount = imagesArr.length
+            let idx = imagesArr.findIndex(el => el.imageId == currentImgId)
+            idx = (idx + n) % imagesCount
+            idx = idx < 0 ? imagesCount-1 : idx
+
+            showImg(imagesArr[idx].imageId)
+        })
+    }
+
+    function getSelectedImageList() {
+        return categoryJson.then(ls => 
+            ls['categoryList'].find(cat =>
+                cat.categoryId == document.getElementById(currentImgId).parentElement.id
+            ).images
+        )
+    }
+
+    function showOrHideSlideButtons(display) {
+        document.getElementsByClassName('prev')[0].style.display = display;
+        document.getElementsByClassName('next')[0].style.display = display;
     }
 
     document.addEventListener('click', function clickOutsideSidebar(event) {
         if (sidebar.style.width == sidebarWidth && !sidebar.contains(event.target) && gallery.contains(event.target)) {
-            showOrHideCategory()
-        }
-    })
-
-    document.addEventListener('click', function clickOutsideModalImage(event) {
-        if (modal.contains(event.target) && !modalImage.contains(event.target)) {
-            modal.style.display = "none"
-            modalImage.removeAttribute('src')
+            showOrHideNav()
         }
     })
 </script>
