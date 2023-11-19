@@ -1,5 +1,13 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: andale mono, monospace;
+    background-color: #fffef9;
+}
+
+#titleContainer {
+    position: sticky;
+    top: 0;
+    padding: 30px;
+    background-color: #fffef9;
 }
 
 .categoryNav {
@@ -11,19 +19,46 @@ body {
     left: 0;
     background-color: #A1887F;
     overflow-x: hidden;
-    padding-top: 60px;
     transition: 0.2s;
     white-space: nowrap;
 }
 
-.navLogo {
+.navContent {
+    padding: 30px;
+}
+
+.navFooter {
+    position: absolute;
+    bottom: 0;
+    margin: 30px;
+    text-align: right;
+}
+
+.navLogo a {
     font-size: 30px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.navContent a {
+    font-size: 25px;
+    letter-spacing: -1px;
+}
+
+.logo {
     cursor: pointer;
+    height: 30px;
+    width: 30px;
+    vertical-align: text-bottom;
 }
 
 .navItem {
     cursor: pointer;
     list-style: none;
+}
+
+#gallery {
+    padding: 30px;
 }
 
 .galleryItem {
@@ -108,4 +143,16 @@ body {
 
 .close:hover, .prev:hover, .next:hover {
     background-color: black;
+}
+
+.row {
+    display: flex;
+}
+
+.col {
+    flex: 50%;
+}
+
+h2 {
+    font-style: italic;
 }

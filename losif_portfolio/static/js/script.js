@@ -1,7 +1,7 @@
 const gallery = document.querySelector('#gallery')
 const modal = document. querySelector('#galleryModal')
 const modalImage = document.querySelector('#modalImg')
-const sidebarWidth = "300px";
+const sidebarWidth = "350px";
 const sidebar = document.querySelector('#categoryContainer')
 let currentImgId = undefined
 
@@ -15,7 +15,7 @@ function populateSideNav() {
         const navItem = document.createElement('li')
         navItem.innerText = category.categoryName
         navItem.onclick = function () {
-            document.getElementById(category.categoryId).scrollIntoView({"behavior": "smooth"})
+            document.getElementById(category.categoryId).scrollIntoView({behavior: "smooth"})
             showOrHideNav()
         }
         navItem.setAttribute('class', 'navItem')
@@ -28,7 +28,7 @@ function populateGallery() {
         const categoryDiv = document.createElement('div')
         categoryDiv.id = category.categoryId
 
-        const nameIdCard = document.createElement('h1')
+        const nameIdCard = document.createElement('h2')
         nameIdCard.innerText = category.categoryName
 
         categoryDiv.appendChild(nameIdCard)
