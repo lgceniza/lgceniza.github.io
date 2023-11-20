@@ -18,7 +18,6 @@ function populateSideNav() {
             document.getElementById(category.categoryId).scrollIntoView({behavior: "smooth"})
             showOrHideNav()
         }
-        navItem.setAttribute('class', 'navItem')
         navList.appendChild(navItem)
     })
 }

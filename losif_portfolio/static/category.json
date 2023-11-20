@@ -2,7 +2,7 @@
     "categoryList": [
         {
             "categoryId": "category1",
-            "categoryName": "category 1 name",
+            "categoryName": "Unreal Engine x Adobe Photoshop",
             "images": [
                 {
                     "imageId": "customGalleryId1",
@@ -16,7 +16,7 @@
         },
         {
             "categoryId": "category2",
-            "categoryName": "category 2 name",
+            "categoryName": "Digital vector art",
             "images": [
                 {
                     "imageId": "customGalleryId2",
@@ -26,7 +26,7 @@
         },
         {
             "categoryId": "category3",
-            "categoryName": "category 3 name",
+            "categoryName": "Architecture/structure concept art",
             "images": [
                 {
                     "imageId": "customGalleryId3",
@@ -36,7 +36,7 @@
         },
         {
             "categoryId": "category4",
-            "categoryName": "category 4 name",
+            "categoryName": "Digital caricature/comic style",
             "images": [
                 {
                     "imageId": "customGalleryId4",
